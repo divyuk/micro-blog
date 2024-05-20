@@ -1,18 +1,15 @@
 import axios from "axios";
 import { useState } from "react";
 
-function CommentCreate({ postId, commentList, setCommentList }) {
+function CommentCreate({ postId, fetchComments }) {
   const [comment, setComment] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const body = { content: comment };
     try {
-      const response = await axios.post(
-        `http://localhost:4001/posts/${postId}/comments`,
-        body
-      );
-      setCommentList([...commentList, response.data]);
+      await axios.post(`http://localhost:4001/posts/${postId}/comments`, body);
+      fetchComments();
       setComment("");
     } catch (err) {
       console.log(err);

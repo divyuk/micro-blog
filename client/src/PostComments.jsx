@@ -6,16 +6,22 @@ import CommentList from "./CommentList";
 function PostComments({ postId }) {
   const [comments, setComments] = useState([]);
   const [count, setCount] = useState(0);
-  useEffect(() => {
-    async function fetchData() {
+
+  const fetchComments = async () => {
+    try {
       const res = await axios.get(
         `http://localhost:4001/posts/${postId}/comments`
       );
-      setComments(() => res.data);
-      setCount(() => res.data.length);
+      setComments(res.data);
+      setCount(res.data.length);
+    } catch (err) {
+      console.log(err);
     }
-    fetchData();
-  }, [postId, setComments, comments]);
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, [postId]);
 
   return (
     <div>
@@ -24,7 +30,8 @@ function PostComments({ postId }) {
       <CommentCreate
         postId={postId}
         commentList={comments}
-        setCommentList={setComments}
+        fetchComments={fetchComments}
+        setComments={setComments}
       />
     </div>
   );
